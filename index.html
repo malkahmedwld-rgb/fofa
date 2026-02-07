@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>طيبة الأثر | فوفانا</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+    <div class="background-animation"></div>
+
+    <nav class="glass-nav">
+        <div class="logo">طيبة الأثر</div>
+        <ul>
+            <li><a href="#hero">الرئيسية</a></li>
+            <li><a href="#quran">القرآن (ورش)</a></li>
+            <li><a href="#radio">الإذاعة</a></li>
+            <li><a href="#tasbih">المسبحة</a></li>
+            <li><a href="#athkar">الأذكار</a></li>
+        </ul>
+    </nav>
+
+    <section id="hero" class="hero-section">
+        <div class="hero-content tilt-card" data-tilt>
+            <h1>طيبة الأثر: فوفانا</h1>
+            <p>الفتاة التي وضعت بصمة خير عند إخوتها</p>
+            <div class="cta-buttons">
+                <a href="#quran" class="btn-3d">ابدأ التلاوة</a>
+            </div>
+        </div>
+    </section>
+
+    <section id="radio" class="section-container">
+        <h2 class="section-title">إذاعة القرآن المباشرة</h2>
+        <div class="radio-player glass-panel">
+            <div class="station-selector">
+                <label>اختر القارئ:</label>
+                <select id="readerSelect">
+                    <option value="" disabled selected>-- اختر القارئ --</option>
+                    <option value="https://backup.qurango.net/radio/yasser_aldosari">ياسر الدوسري</option>
+                    <option value="https://backup.qurango.net/radio/maher">ماهر المعيقلي</option>
+                    <option value="https://backup.qurango.net/radio/abdulbasit_uj">عبدالباسط عبدالصمد (ورش)</option>
+                    <option value="https://backup.qurango.net/radio/alkouchi">العيون الكوشي (ورش)</option>
+                </select>
+            </div>
+            <div class="audio-controls">
+                <audio id="liveAudio" controls hidden></audio>
+                <div class="visualizer">
+                    <div class="bar"></div><div class="bar"></div><div class="bar"></div>
+                </div>
+                <p id="statusText">اختر قارئاً للبدء</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="tasbih" class="section-container">
+        <h2 class="section-title">المسبحة الإلكترونية</h2>
+        <div class="tasbih-container tilt-card">
+            <div class="display-screen">
+                <span id="tasbihCount">0</span>
+            </div>
+            <button id="tasbihBtn" class="tasbih-btn">سبحان الله</button>
+            <button id="resetTasbih" class="reset-btn"><i class="fas fa-redo"></i></button>
+        </div>
+    </section>
+
+    <section id="athkar" class="section-container">
+        <h2 class="section-title">أذكار مأثورة</h2>
+        <div class="cards-grid" id="athkarGrid">
+            </div>
+    </section>
+
+    <section id="quran" class="section-container">
+        <h2 class="section-title">المصحف الشريف (رواية ورش)</h2>
+        
+        <div id="surahIndex" class="surah-grid">
+            </div>
+
+        <div id="surahViewer" class="surah-viewer hidden">
+            <button id="closeSurah" class="close-btn">عودة للفهرس <i class="fas fa-arrow-left"></i></button>
+            <h3 id="viewSurahName"></h3>
+            <div id="surahContent" class="quran-text"></div>
+        </div>
+    </section>
+
+    <footer>
+        <p>صدقة جارية عن فوفانا | طيبة الأثر</p>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.7.0/vanilla-tilt.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
