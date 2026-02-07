@@ -1,111 +1,99 @@
 document.addEventListener('DOMContentLoaded', () => {
     
-    // --- تفعيل تأثير الـ 3D للمكتبة Vanilla Tilt ---
-    VanillaTilt.init(document.querySelectorAll(".tilt-card"), {
-        max: 15,
-        speed: 400,
-        glare: true,
-        "max-glare": 0.5,
-    });
+    // --- 1. عرض التاريخ الهجري (تقريبي أو عبر دالة) ---
+    const dateDisplay = document.getElementById('dateDisplay');
+    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', calendar: 'islamic-umalqura' };
+    dateDisplay.innerText = new Date().toLocaleDateString('ar-SA', options);
 
-    // --- 1. قسم الإذاعة ---
+    // --- 2. مشغل الإذاعة ---
+    const audioPlayer = document.getElementById('audioPlayer');
+    const playBtn = document.getElementById('playBtn');
     const readerSelect = document.getElementById('readerSelect');
-    const audioPlayer = document.getElementById('liveAudio');
-    const statusText = document.getElementById('statusText');
+    const radioStatus = document.getElementById('radioStatus');
+    let isPlaying = false;
 
-    readerSelect.addEventListener('change', (e) => {
-        const url = e.target.value;
-        if (url) {
-            audioPlayer.src = url;
+    playBtn.addEventListener('click', () => {
+        if (!readerSelect.value) {
+            alert('الرجاء اختيار القارئ أولاً');
+            return;
+        }
+
+        if (isPlaying) {
+            audioPlayer.pause();
+            playBtn.innerHTML = '<i class="fas fa-play"></i>';
+            radioStatus.innerText = "متوقف مؤقتاً";
+            radioStatus.style.color = "#fff";
+            document.querySelector('.wave-visualizer').style.opacity = '0.3';
+            isPlaying = false;
+        } else {
+            audioPlayer.src = readerSelect.value;
             audioPlayer.play();
-            statusText.innerText = "جاري التشغيل: " + e.target.options[e.target.selectedIndex].text;
-            statusText.style.color = "#d4af37";
+            playBtn.innerHTML = '<i class="fas fa-pause"></i>';
+            radioStatus.innerText = "جاري الاستماع...";
+            radioStatus.style.color = "#d4af37"; // لون ذهبي
+            document.querySelector('.wave-visualizer').style.opacity = '1';
+            isPlaying = true;
         }
     });
 
-    // --- 2. قسم المسبحة ---
+    readerSelect.addEventListener('change', () => {
+        isPlaying = false;
+        playBtn.click(); // تشغيل تلقائي عند التغيير
+    });
+
+    // --- 3. المسبحة ---
     let count = 0;
     const countDisplay = document.getElementById('tasbihCount');
-    const tasbihBtn = document.getElementById('tasbihBtn');
-    const resetBtn = document.getElementById('resetTasbih');
+    const countBtn = document.getElementById('countBtn');
+    const resetBtn = document.getElementById('resetBtn');
 
-    tasbihBtn.addEventListener('click', () => {
+    countBtn.addEventListener('click', () => {
         count++;
-        countDisplay.innerText = count;
-        // تأثير اهتزاز بسيط
-        navigator.vibrate(50); 
+        // تنسيق الرقم ليظهر دائماً بـ 3 خانات (001, 002)
+        countDisplay.innerText = count.toString().padStart(3, '0');
+        
+        // تأثير اهتزاز للجوال
+        if (navigator.vibrate) navigator.vibrate(30);
     });
 
     resetBtn.addEventListener('click', () => {
-        count = 0;
-        countDisplay.innerText = 0;
-    });
-
-    // --- 3. قسم الأذكار (بيانات محلية) ---
-    const athkarData = [
-        "سبحان الله وبحمده", "سبحان الله العظيم", "لا إله إلا الله", 
-        "الله أكبر", "أستغفر الله", "لا حول ولا قوة إلا بالله"
-    ];
-    const athkarGrid = document.getElementById('athkarGrid');
-    
-    athkarData.forEach(thikr => {
-        const card = document.createElement('div');
-        card.className = 'thikr-card tilt-card';
-        card.innerHTML = `<h3>${thikr}</h3>`;
-        athkarGrid.appendChild(card);
-    });
-
-    // --- 4. قسم القرآن (ورش) ---
-    // ملاحظة: جلب نص "ورش" كنص رقمي صعب لعدم توفر API مجاني موثوق للنص الكامل برسم ورش بسهولة مثل حفص
-    // لذا سنستخدم روابط لصور المصحف أو نص حفص كمثال، ولكن سأضع لك منطق الفهرس.
-    
-    const surahIndex = document.getElementById('surahIndex');
-    const surahViewer = document.getElementById('surahViewer');
-    const surahContent = document.getElementById('surahContent');
-    const viewSurahName = document.getElementById('viewSurahName');
-    const closeSurah = document.getElementById('closeSurah');
-
-    // قائمة بأسماء السور (اختصاراً سأضع أول 5 سور كمثال، يمكنك إضافة الباقي)
-    const surahs = [
-        { id: 1, name: "الفاتحة" }, { id: 2, name: "البقرة" }, 
-        { id: 3, name: "آل عمران" }, { id: 18, name: "الكهف" }, { id: 67, name: "الملك" }
-    ];
-
-    // بناء الفهرس
-    surahs.forEach(surah => {
-        const item = document.createElement('div');
-        item.className = 'surah-item';
-        item.innerText = `${surah.id}. ${surah.name}`;
-        item.onclick = () => loadSurah(surah.id, surah.name);
-        surahIndex.appendChild(item);
-    });
-
-    async function loadSurah(number, name) {
-        surahIndex.style.display = 'none';
-        surahViewer.classList.remove('hidden');
-        viewSurahName.innerText = "سورة " + name;
-        surahContent.innerHTML = "جاري التحميل...";
-
-        try {
-            // استخدام API (هذا API يعيد النص برواية حفص افتراضياً، للحصول على ورش نصاً الأمر معقد تقنياً ويحتاج ملفات json خاصة)
-            // كحل بديل ممتاز: نعرض صور مصحف المدينة (ورش) أو نستخدم API للنص العادي.
-            // هنا مثال لجلب النص العادي:
-            const response = await fetch(`https://api.alquran.cloud/v1/surah/${number}`);
-            const data = await response.json();
-            
-            let verses = data.data.ayahs.map(ayah => 
-                `<span class="ayah">${ayah.text} ﴿${ayah.numberInSurah}﴾</span>`
-            ).join(' ');
-            
-            surahContent.innerHTML = verses;
-        } catch (error) {
-            surahContent.innerText = "حدث خطأ في تحميل السورة، تأكد من الاتصال بالإنترنت.";
+        if(confirm("هل تريد تصفير العداد؟")) {
+            count = 0;
+            countDisplay.innerText = "000";
         }
-    }
+    });
 
-    closeSurah.addEventListener('click', () => {
-        surahViewer.classList.add('hidden');
-        surahIndex.style.display = 'grid';
-        surahContent.innerHTML = "";
+    // --- 4. توليد الأذكار ---
+    const athkarData = [
+        "سبحان الله", "الحمد لله", "لا إله إلا الله", "الله أكبر",
+        "سبحان الله وبحمده", "سبحان الله العظيم", "أستغفر الله وأتوب إليه",
+        "لا حول ولا قوة إلا بالله", "اللهم صل على محمد"
+    ];
+
+    const athkarGrid = document.getElementById('athkar-grid') || document.querySelector('.athkar-grid');
+    
+    athkarData.forEach(text => {
+        const div = document.createElement('div');
+        div.className = 'thikr-item';
+        div.innerHTML = `<h4>${text}</h4>`;
+        div.onclick = function() {
+            // وميض بسيط عند الضغط
+            this.style.backgroundColor = '#f3e5ab';
+            setTimeout(() => this.style.backgroundColor = 'white', 200);
+            navigator.vibrate(20);
+        };
+        athkarGrid.appendChild(div);
+    });
+
+    // --- 5. توليد قائمة سور القرآن (تجريبي) ---
+    const surahList = document.getElementById('surahList');
+    const surahNames = ["الفاتحة", "البقرة", "آل عمران", "النساء", "المائدة", "الأنعام", "الأعراف", "الأنفال", "التوبة", "يونس", "هود", "يوسف", "الرعد", "إبراهيم", "الحجر", "النحل", "الإسراء", "الكهف", "مريم", "طه"];
+    
+    surahNames.forEach((name, index) => {
+        const btn = document.createElement('div');
+        btn.className = 'surah-btn';
+        btn.innerText = `${index + 1}. ${name}`;
+        btn.onclick = () => alert(`سيتم فتح سورة ${name} برواية ورش`);
+        surahList.appendChild(btn);
     });
 });
