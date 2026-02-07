@@ -1,11 +1,19 @@
 document.addEventListener('DOMContentLoaded', () => {
     
-    // --- 1. عرض التاريخ الهجري (تقريبي أو عبر دالة) ---
+    // 1. القائمة في الجوال
+    const menuBtn = document.getElementById('mobileMenuBtn');
+    const sidebar = document.getElementById('sidebar');
+    
+    menuBtn.addEventListener('click', () => {
+        sidebar.classList.toggle('active');
+    });
+
+    // 2. التاريخ الهجري
     const dateDisplay = document.getElementById('dateDisplay');
     const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', calendar: 'islamic-umalqura' };
     dateDisplay.innerText = new Date().toLocaleDateString('ar-SA', options);
 
-    // --- 2. مشغل الإذاعة ---
+    // 3. الإذاعة
     const audioPlayer = document.getElementById('audioPlayer');
     const playBtn = document.getElementById('playBtn');
     const readerSelect = document.getElementById('readerSelect');
@@ -22,26 +30,24 @@ document.addEventListener('DOMContentLoaded', () => {
             audioPlayer.pause();
             playBtn.innerHTML = '<i class="fas fa-play"></i>';
             radioStatus.innerText = "متوقف مؤقتاً";
-            radioStatus.style.color = "#fff";
-            document.querySelector('.wave-visualizer').style.opacity = '0.3';
             isPlaying = false;
         } else {
             audioPlayer.src = readerSelect.value;
             audioPlayer.play();
             playBtn.innerHTML = '<i class="fas fa-pause"></i>';
             radioStatus.innerText = "جاري الاستماع...";
-            radioStatus.style.color = "#d4af37"; // لون ذهبي
-            document.querySelector('.wave-visualizer').style.opacity = '1';
             isPlaying = true;
         }
     });
 
     readerSelect.addEventListener('change', () => {
-        isPlaying = false;
-        playBtn.click(); // تشغيل تلقائي عند التغيير
+        if(isPlaying) {
+            audioPlayer.src = readerSelect.value;
+            audioPlayer.play();
+        }
     });
 
-    // --- 3. المسبحة ---
+    // 4. المسبحة
     let count = 0;
     const countDisplay = document.getElementById('tasbihCount');
     const countBtn = document.getElementById('countBtn');
@@ -49,51 +55,38 @@ document.addEventListener('DOMContentLoaded', () => {
 
     countBtn.addEventListener('click', () => {
         count++;
-        // تنسيق الرقم ليظهر دائماً بـ 3 خانات (001, 002)
         countDisplay.innerText = count.toString().padStart(3, '0');
-        
-        // تأثير اهتزاز للجوال
         if (navigator.vibrate) navigator.vibrate(30);
     });
 
     resetBtn.addEventListener('click', () => {
-        if(confirm("هل تريد تصفير العداد؟")) {
-            count = 0;
-            countDisplay.innerText = "000";
-        }
+        count = 0;
+        countDisplay.innerText = "000";
     });
 
-    // --- 4. توليد الأذكار ---
+    // 5. الأذكار
     const athkarData = [
-        "سبحان الله", "الحمد لله", "لا إله إلا الله", "الله أكبر",
-        "سبحان الله وبحمده", "سبحان الله العظيم", "أستغفر الله وأتوب إليه",
-        "لا حول ولا قوة إلا بالله", "اللهم صل على محمد"
+        "سبحان الله وبحمده", "سبحان الله العظيم", "لا إله إلا الله", 
+        "الله أكبر", "أستغفر الله", "لا حول ولا قوة إلا بالله", 
+        "اللهم صل وسلم على نبينا محمد", "حسبي الله ونعم الوكيل"
     ];
-
-    const athkarGrid = document.getElementById('athkar-grid') || document.querySelector('.athkar-grid');
+    const athkarGrid = document.getElementById('athkar');
     
-    athkarData.forEach(text => {
+    athkarData.forEach(txt => {
         const div = document.createElement('div');
         div.className = 'thikr-item';
-        div.innerHTML = `<h4>${text}</h4>`;
-        div.onclick = function() {
-            // وميض بسيط عند الضغط
-            this.style.backgroundColor = '#f3e5ab';
-            setTimeout(() => this.style.backgroundColor = 'white', 200);
-            navigator.vibrate(20);
-        };
+        div.innerHTML = `<h4>${txt}</h4>`;
         athkarGrid.appendChild(div);
     });
 
-    // --- 5. توليد قائمة سور القرآن (تجريبي) ---
+    // 6. سور القرآن
     const surahList = document.getElementById('surahList');
-    const surahNames = ["الفاتحة", "البقرة", "آل عمران", "النساء", "المائدة", "الأنعام", "الأعراف", "الأنفال", "التوبة", "يونس", "هود", "يوسف", "الرعد", "إبراهيم", "الحجر", "النحل", "الإسراء", "الكهف", "مريم", "طه"];
+    const surahs = ["الفاتحة", "البقرة", "آل عمران", "النساء", "المائدة", "الأنعام", "الأعراف", "الأنفال", "التوبة", "يونس", "هود", "يوسف", "الكهف", "مريم", "طه", "الأنبياء", "الحج", "المؤمنون", "الملك"];
     
-    surahNames.forEach((name, index) => {
+    surahs.forEach((name, i) => {
         const btn = document.createElement('div');
         btn.className = 'surah-btn';
-        btn.innerText = `${index + 1}. ${name}`;
-        btn.onclick = () => alert(`سيتم فتح سورة ${name} برواية ورش`);
+        btn.innerText = `${i+1}. ${name}`;
         surahList.appendChild(btn);
     });
 });
