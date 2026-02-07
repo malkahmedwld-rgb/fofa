@@ -5,14 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>طيبة الأثر | فوفانا</title>
     <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Reem+Kufi:wght@400;700&family=Tajawal:wght@300;500;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
+    <button class="mobile-menu-btn" id="mobileMenuBtn">
+        <i class="fas fa-bars"></i>
+    </button>
+
     <div class="main-wrapper">
         
-        <aside class="islamic-sidebar">
+        <aside class="islamic-sidebar" id="sidebar">
             <div class="pattern-overlay"></div>
             <div class="sidebar-content">
                 <div class="logo-area">
@@ -20,8 +24,8 @@
                     <h2>فوفانا</h2>
                 </div>
                 <nav class="side-nav">
-                    <a href="#hero" class="active"><i class="fas fa-home"></i> الرئيسية</a>
-                    <a href="#quran"><i class="fas fa-quran"></i> القرآن (ورش)</a>
+                    <a href="#" class="active"><i class="fas fa-home"></i> الرئيسية</a>
+                    <a href="#quran"><i class="fas fa-book-open"></i> القرآن (ورش)</a>
                     <a href="#radio"><i class="fas fa-broadcast-tower"></i> الإذاعة</a>
                     <a href="#tasbih"><i class="fas fa-fingerprint"></i> المسبحة</a>
                     <a href="#athkar"><i class="fas fa-hands-praying"></i> الأذكار</a>
@@ -48,21 +52,16 @@
                         <h3>إذاعة القرآن المباشرة</h3>
                     </div>
                     <div class="radio-controls">
-                        <div class="select-wrapper">
-                            <select id="readerSelect">
-                                <option value="" disabled selected>-- اختر القارئ --</option>
-                                <option value="https://backup.qurango.net/radio/yasser_aldosari">ياسر الدوسري</option>
-                                <option value="https://backup.qurango.net/radio/maher">ماهر المعيقلي</option>
-                                <option value="https://backup.qurango.net/radio/abdulbasit_uj">عبدالباسط (ورش)</option>
-                                <option value="https://backup.qurango.net/radio/alkouchi">العيون الكوشي (ورش)</option>
-                            </select>
-                            <i class="fas fa-chevron-down"></i>
-                        </div>
-                        <div class="player-actions">
+                        <select id="readerSelect">
+                            <option value="" disabled selected>-- اختر القارئ --</option>
+                            <option value="https://backup.qurango.net/radio/yasser_aldosari">ياسر الدوسري</option>
+                            <option value="https://backup.qurango.net/radio/maher">ماهر المعيقلي</option>
+                            <option value="https://backup.qurango.net/radio/abdulbasit_uj">عبدالباسط (ورش)</option>
+                            <option value="https://backup.qurango.net/radio/alkouchi">العيون الكوشي (ورش)</option>
+                        </select>
+                        
+                        <div class="player-box">
                             <button id="playBtn" class="play-btn"><i class="fas fa-play"></i></button>
-                            <div class="wave-visualizer">
-                                <span></span><span></span><span></span><span></span><span></span>
-                            </div>
                             <p id="radioStatus">جاهز للتشغيل</p>
                         </div>
                         <audio id="audioPlayer" hidden></audio>
@@ -79,11 +78,12 @@
                         </div>
                         <div class="tasbih-buttons">
                             <button id="countBtn" class="main-tasbih-btn">سبحان الله</button>
-                            <button id="resetBtn" class="small-btn" title="تصفير"><i class="fas fa-redo"></i></button>
+                            <button id="resetBtn" class="reset-btn"><i class="fas fa-redo"></i></button>
                         </div>
                     </div>
                 </section>
 
+                <h3 class="section-title">أذكار مأثورة</h3>
                 <section id="athkar" class="athkar-grid">
                     </section>
 
@@ -91,8 +91,7 @@
                     <div class="card-header dark">
                         <h3>فهرس المصحف (رواية ورش)</h3>
                     </div>
-                    <div class="surah-list" id="surahList">
-                        </div>
+                    <div class="surah-list" id="surahList"></div>
                 </section>
 
             </div>
